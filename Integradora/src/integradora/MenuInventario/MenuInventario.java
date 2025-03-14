@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package integradora.MenuInventario;
 
 import integradora.Main;
@@ -15,10 +11,6 @@ import java.sql.SQLException;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import static javax.swing.JOptionPane.showMessageDialog;
 
-/**
- *
- * @author DELL
- */
 public class MenuInventario extends javax.swing.JFrame {
 
     /**
@@ -26,19 +18,43 @@ public class MenuInventario extends javax.swing.JFrame {
      */
     public MenuInventario() {
         initComponents();
+        ObtenerSecciones();
         ObtenerListaDeProductos();
         
         AgregarCuantas.setColumns(5);
         QuitarCuantas.setColumns(5);
     }
+    public void ObtenerSecciones(){
+        var lista = Main.Secciones;
+        
+        System.out.println(Main.Secciones.size());
+        Secciones.removeAllItems();
+        for (String seccion : lista){
+            System.out.println(seccion);
+            Secciones.addItem(seccion);
+        }
+    }
+    
     public void ObtenerListaDeProductos(){
-        var listaProductos = Main.Inventario;
+        String seccion = "";
+        try { seccion = Secciones.getSelectedItem().toString(); }
+        catch (Exception e) {
+            System.out.println("Error en ObtenerListaDeProductos");
+            return;
+        }
+        
+        Main.ObtenerOActualizarLosProductos(seccion);
         
         Productos.removeAllItems();
-        for (Producto producto: listaProductos){
-            //System.out.println("Se agregeo el producto \n" + producto);
-            Productos.addItem(producto.Nombre);
+        try {
+            for (Producto producto: Main.Inventario){
+                //System.out.println("Se agrego el producto " + producto.Nombre + " \n" + producto);
+                Productos.addItem(producto.Nombre);
+            }
+        } catch (Exception e){
+            System.out.println("Error en ObtenerListaDeProductos \n" + e);
         }
+        
     }
 
     /**
@@ -61,6 +77,11 @@ public class MenuInventario extends javax.swing.JFrame {
         QuitarUnidades = new javax.swing.JButton();
         AggProductoBoton = new javax.swing.JButton();
         ElimProductoBoton = new javax.swing.JButton();
+        SeccionLabel = new javax.swing.JLabel();
+        Secciones = new javax.swing.JComboBox<>();
+        AgregarSeccion = new javax.swing.JButton();
+        EliminarSeccion = new javax.swing.JButton();
+        CalcularRestocks = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -116,6 +137,35 @@ public class MenuInventario extends javax.swing.JFrame {
             }
         });
 
+        SeccionLabel.setText("Seccion");
+
+        Secciones.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SeccionesActionPerformed(evt);
+            }
+        });
+
+        AgregarSeccion.setText("Agregar Seccion");
+        AgregarSeccion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AgregarSeccionActionPerformed(evt);
+            }
+        });
+
+        EliminarSeccion.setText("Eliminar Secciones");
+        EliminarSeccion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EliminarSeccionActionPerformed(evt);
+            }
+        });
+
+        CalcularRestocks.setText("Calcular Restocks");
+        CalcularRestocks.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CalcularRestocksActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -123,58 +173,78 @@ public class MenuInventario extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(ProductoLabel)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(Productos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(BackToMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(AgregarCuantas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(AgregarUnidades, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(QuitarCuantas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(QuitarUnidades, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(AggProductoBoton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ElimProductoBoton)))
-                .addContainerGap(116, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 115, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(AgregarCuantas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(AgregarUnidades, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(QuitarCuantas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(CalcularRestocks, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(QuitarUnidades, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(SeccionLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(Secciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(317, 317, 317)
+                                .addComponent(BackToMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(ProductoLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(Productos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(AgregarSeccion, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(EliminarSeccion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(AggProductoBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(ElimProductoBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(112, 112, 112))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(BackToMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(SeccionLabel)
+                    .addComponent(Secciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ProductoLabel)
+                    .addComponent(Productos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(ProductoLabel)
-                            .addComponent(Productos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(AgregarCuantas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(AgregarUnidades, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(AgregarCuantas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(QuitarCuantas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(QuitarUnidades, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(BackToMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(QuitarCuantas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(QuitarUnidades, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(AgregarUnidades, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(64, 64, 64)))
+                        .addComponent(CalcularRestocks)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(AggProductoBoton)
                     .addComponent(ElimProductoBoton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(AgregarSeccion)
+                    .addComponent(EliminarSeccion))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         pack();
@@ -206,8 +276,8 @@ public class MenuInventario extends javax.swing.JFrame {
         }
         
         unidades += producto.Unidades;
-        EjecutarUnComandoALaBaseDeDatos("update inventario set unidades = '" + unidades + "' where id = '" + (producto.ID) + "';");
-        Main.ObtenerOActualizarLosProductos();
+        EjecutarUnComandoALaBaseDeDatos("update " + Secciones.getSelectedItem().toString() + " set unidades = '" + unidades + "' where id = '" + (producto.ID) + "';");
+        Main.ObtenerOActualizarLosProductos("productos");
         ActualizarTexto();
     }//GEN-LAST:event_AgregarUnidadesActionPerformed
 
@@ -225,8 +295,8 @@ public class MenuInventario extends javax.swing.JFrame {
         }
         
         unidades = producto.Unidades - unidades;
-        EjecutarUnComandoALaBaseDeDatos("update inventario set unidades = '" + unidades + "' where id = '" + (producto.ID) + "';");
-        Main.ObtenerOActualizarLosProductos();
+        EjecutarUnComandoALaBaseDeDatos("update " + Secciones.getSelectedItem().toString() + " set unidades = '" + unidades + "' where id = '" + (producto.ID) + "';");
+        Main.ObtenerOActualizarLosProductos("productos");
         ActualizarTexto();
     }//GEN-LAST:event_QuitarUnidadesActionPerformed
 
@@ -243,6 +313,39 @@ public class MenuInventario extends javax.swing.JFrame {
         eliminarProducto.menu = this;
         eliminarProducto.setVisible(true);
     }//GEN-LAST:event_ElimProductoBotonActionPerformed
+
+    private void SeccionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SeccionesActionPerformed
+        ObtenerListaDeProductos();
+    }//GEN-LAST:event_SeccionesActionPerformed
+
+    private void AgregarSeccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AgregarSeccionActionPerformed
+        AgregarSeccion agregarSeccion = new AgregarSeccion();
+        
+        agregarSeccion.menu = this;
+        agregarSeccion.setVisible(true);
+    }//GEN-LAST:event_AgregarSeccionActionPerformed
+
+    private void EliminarSeccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EliminarSeccionActionPerformed
+        EliminarSeccion eliminarSeccion = new EliminarSeccion();
+        
+        eliminarSeccion.menu = this;
+        eliminarSeccion.setVisible(true);
+    }//GEN-LAST:event_EliminarSeccionActionPerformed
+
+    private void CalcularRestocksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CalcularRestocksActionPerformed
+        CalcularReStocks calc = new CalcularReStocks();
+        Producto producto = null;
+        try { producto = ObtenerProductoSeleccionado(); }
+        catch (Exception e) {
+            System.out.println("Error en CalcularRestocksActionPerformed \n" + e);
+            showMessageDialog(null, "Seleccione un producto", "Error", ERROR_MESSAGE);
+            return;
+        }
+        
+        calc.menu = this;
+        calc.producto = producto;
+        calc.Iniciar();
+    }//GEN-LAST:event_CalcularRestocksActionPerformed
 
     /**
      * @param args the command line arguments
@@ -288,11 +391,14 @@ public class MenuInventario extends javax.swing.JFrame {
     }
     public void ActualizarTexto(){
         Producto producto = ObtenerProductoSeleccionado();
-        if (producto == null) return;
+        
         
         TextoPrincipal.selectAll();
         TextoPrincipal.replaceSelection(null);
-        TextoPrincipal.insert(producto.toString(), 0);
+        if (producto == null) TextoPrincipal.insert("No hay prodcutos en esta seccion", 0);
+        else TextoPrincipal.insert(producto.toString(), 0);
+        
+        
     }
     public void EjecutarUnComandoALaBaseDeDatos(String comando){
         String url = "jdbc:mysql://localhost:3306/servikino",
@@ -322,13 +428,18 @@ public class MenuInventario extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AggProductoBoton;
     private javax.swing.JTextField AgregarCuantas;
+    private javax.swing.JButton AgregarSeccion;
     private javax.swing.JButton AgregarUnidades;
     private javax.swing.JButton BackToMenu;
+    private javax.swing.JButton CalcularRestocks;
     private javax.swing.JButton ElimProductoBoton;
+    private javax.swing.JButton EliminarSeccion;
     private javax.swing.JLabel ProductoLabel;
     private javax.swing.JComboBox<String> Productos;
     private javax.swing.JTextField QuitarCuantas;
     private javax.swing.JButton QuitarUnidades;
+    private javax.swing.JLabel SeccionLabel;
+    public javax.swing.JComboBox<String> Secciones;
     private javax.swing.JTextArea TextoPrincipal;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables

@@ -5,6 +5,7 @@
 package integradora.MenuInventario;
 
 import integradora.Main;
+import java.util.ArrayList;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import static javax.swing.JOptionPane.showMessageDialog;
 
@@ -12,18 +13,17 @@ import static javax.swing.JOptionPane.showMessageDialog;
  *
  * @author DELL
  */
-public class AgregarProducto extends javax.swing.JFrame {
+public class AgregarSeccion extends javax.swing.JFrame {
+
     public MenuInventario menu;
     
     /**
-     * Creates new form AgregarProducto
+     * Creates new form AgregarSeccion
      */
-    public AgregarProducto() {
+    public AgregarSeccion() {
         initComponents();
         
         Nombre.setColumns(8);
-        Unidades.setColumns(8);
-        Ventas.setColumns(8);
     }
 
     /**
@@ -38,10 +38,6 @@ public class AgregarProducto extends javax.swing.JFrame {
         CerrarBoton = new javax.swing.JButton();
         NombreLabel = new javax.swing.JLabel();
         Nombre = new javax.swing.JTextField();
-        Unidades = new javax.swing.JTextField();
-        Ventas = new javax.swing.JTextField();
-        VentasLabel = new javax.swing.JLabel();
-        UnidadesLabel1 = new javax.swing.JLabel();
         ConfirmarBoton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -55,10 +51,6 @@ public class AgregarProducto extends javax.swing.JFrame {
 
         NombreLabel.setText("Nombre");
 
-        VentasLabel.setText("Ventas");
-
-        UnidadesLabel1.setText("Unidades");
-
         ConfirmarBoton.setText("Confirmar");
         ConfirmarBoton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -70,24 +62,16 @@ public class AgregarProducto extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(ConfirmarBoton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(CerrarBoton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(CerrarBoton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ConfirmarBoton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(Nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(NombreLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Unidades, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(UnidadesLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(VentasLabel)
-                    .addComponent(Ventas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(193, Short.MAX_VALUE))
+                .addGap(240, 240, 240))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -95,14 +79,10 @@ public class AgregarProducto extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(CerrarBoton)
-                    .addComponent(NombreLabel)
-                    .addComponent(VentasLabel)
-                    .addComponent(UnidadesLabel1))
+                    .addComponent(NombreLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Unidades, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Ventas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ConfirmarBoton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -116,35 +96,31 @@ public class AgregarProducto extends javax.swing.JFrame {
 
     private void ConfirmarBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConfirmarBotonActionPerformed
         String nombre = "";
-        int unidades = 0, ventas = 0;
         
         try {
-            nombre = Nombre.getText().toString();
+            nombre = Nombre.getText();
         } catch (Exception e) {
             System.out.println("Hubo un error al intentar acceder el nombre");
             showMessageDialog(null, "Hubo un error al intentar acceder el nombre", "Error", ERROR_MESSAGE);
             return;
         }
         
-        try {
-            unidades = Integer.parseInt(Unidades.getText());
-        } catch (Exception e) {
-            System.out.println("Hubo un error al intentar acceder las unidades");
-            showMessageDialog(null, "Hubo un error al intentar acceder las unidades", "Error", ERROR_MESSAGE);
-            return;
-        }
+        // Pospuesto por intentar arreglar errores
+//        ArrayList<String> secciones = Main.Secciones;
+//        for (String seccion : secciones)
+//            if (seccion.equalsIgnoreCase(nombre)){
+//                
+//            }
         
-        try {
-            ventas = Integer.parseInt(Ventas.getText());
-        } catch (Exception e) {
-            System.out.println("Hubo un error al intentar acceder las unidades");
-            showMessageDialog(null, "Hubo un error al intentar acceder las unidades", "Error", ERROR_MESSAGE);
-            return;
-        }
+        menu.EjecutarUnComandoALaBaseDeDatos("create table " + nombre + "("
+                + "id int(10) unsigned not null primary key auto_increment,"
+                + "nombre varchar(40) not null,"
+                + "unidades int(10) not null,"
+                + "ventas int(10) not null"
+                + ");");
         
-        menu.EjecutarUnComandoALaBaseDeDatos("insert into " + menu.Secciones.getSelectedItem().toString() + " (nombre,unidades,ventas) values ('" + nombre + "', '" + unidades + "', '" + ventas + "');");
-        
-        Main.ObtenerOActualizarLosProductos(menu.Secciones.getSelectedItem().toString());
+        Main.ActualizarSecciones();
+        menu.ObtenerSecciones();
         menu.ObtenerListaDeProductos();
         menu.ActualizarTexto();
         Cerrar();
@@ -167,20 +143,20 @@ public class AgregarProducto extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AgregarProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AgregarSeccion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AgregarProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AgregarSeccion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AgregarProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AgregarSeccion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AgregarProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AgregarSeccion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AgregarProducto().setVisible(true);
+                new AgregarSeccion().setVisible(true);
             }
         });
     }
@@ -189,15 +165,10 @@ public class AgregarProducto extends javax.swing.JFrame {
         setVisible(false);
         dispose();
     }
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton CerrarBoton;
     private javax.swing.JButton ConfirmarBoton;
     private javax.swing.JTextField Nombre;
     private javax.swing.JLabel NombreLabel;
-    private javax.swing.JTextField Unidades;
-    private javax.swing.JLabel UnidadesLabel1;
-    private javax.swing.JTextField Ventas;
-    private javax.swing.JLabel VentasLabel;
     // End of variables declaration//GEN-END:variables
 }

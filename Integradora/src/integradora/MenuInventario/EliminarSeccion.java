@@ -1,32 +1,24 @@
-
 package integradora.MenuInventario;
 
 import integradora.Main;
 import integradora.Producto;
 
-/**
- *
- * @author DELL
- */
-public class EliminarProducto extends javax.swing.JFrame {
-
-    public MenuInventario menu;
+public class EliminarSeccion extends javax.swing.JFrame {
+    public  MenuInventario menu;
     
     /**
-     * Creates new form EliminarProducto
+     * Creates new form EliminarSeccion
      */
-    public EliminarProducto() {
+    public EliminarSeccion() {
         initComponents();
-        
-        ObtenerListaDeProductos();
+        ActualizarSecciones();
     }
-    private void ObtenerListaDeProductos(){
-        var listaProductos = Main.Inventario;
+    private void ActualizarSecciones(){
+        var secciones = Main.Secciones;
         
-        Productos.removeAllItems();
-        for (Producto producto: listaProductos){
-            //System.out.println("Se agregeo el producto \n" + producto);
-            Productos.addItem(producto.Nombre);
+        Secciones.removeAllItems();
+        for (String seccion: secciones){
+            Secciones.addItem(seccion);
         }
     }
 
@@ -40,10 +32,10 @@ public class EliminarProducto extends javax.swing.JFrame {
     private void initComponents() {
 
         CerrarBoton = new javax.swing.JButton();
-        Productos = new javax.swing.JComboBox<>();
+        Secciones = new javax.swing.JComboBox<>();
         Eliminar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         CerrarBoton.setText("Cerrar");
         CerrarBoton.addActionListener(new java.awt.event.ActionListener() {
@@ -51,8 +43,6 @@ public class EliminarProducto extends javax.swing.JFrame {
                 CerrarBotonActionPerformed(evt);
             }
         });
-
-        Productos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         Eliminar.setText("Eliminar Producto");
         Eliminar.addActionListener(new java.awt.event.ActionListener() {
@@ -71,8 +61,8 @@ public class EliminarProducto extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(CerrarBoton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(Productos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(232, 232, 232))
+                        .addComponent(Secciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(244, 244, 244))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(Eliminar)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
@@ -83,7 +73,7 @@ public class EliminarProducto extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(CerrarBoton)
-                    .addComponent(Productos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(Secciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Eliminar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -97,16 +87,14 @@ public class EliminarProducto extends javax.swing.JFrame {
     }//GEN-LAST:event_CerrarBotonActionPerformed
 
     private void EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EliminarActionPerformed
-        Producto producto = ObtenerProductoSeleccionado();
-        if (producto == null) return;
-        
-        menu.EjecutarUnComandoALaBaseDeDatos("delete from inventario where id = " + producto.ID + ";");
-        
-        Main.ObtenerOActualizarLosProductos("productos");
-        ObtenerListaDeProductos();
-        menu.ObtenerListaDeProductos();
-        menu.ActualizarTexto();
-        
+        String seccion = Secciones.getSelectedItem().toString();
+        if (seccion == "" || seccion == null) return;
+
+        menu.EjecutarUnComandoALaBaseDeDatos("drop table " + seccion + ";");
+
+        Main.ActualizarSecciones();
+        menu.ObtenerSecciones();
+        ActualizarSecciones();
     }//GEN-LAST:event_EliminarActionPerformed
 
     /**
@@ -126,40 +114,31 @@ public class EliminarProducto extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(EliminarProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EliminarSeccion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(EliminarProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EliminarSeccion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(EliminarProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EliminarSeccion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EliminarProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EliminarSeccion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new EliminarProducto().setVisible(true);
+                new EliminarSeccion().setVisible(true);
             }
         });
     }
-    
+
     private void Cerrar(){
         setVisible(false);
         dispose();
     }
-    
-    private Producto ObtenerProductoSeleccionado(){
-        try { return Main.Inventario.get(Productos.getSelectedIndex());
-        } catch (Exception e) { 
-            System.out.println("No se pudo obtener producto seleccionado" + Productos.getSelectedIndex() + "\n" + e);
-            return null; 
-        }
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton CerrarBoton;
     private javax.swing.JButton Eliminar;
-    private javax.swing.JComboBox<String> Productos;
+    private javax.swing.JComboBox<String> Secciones;
     // End of variables declaration//GEN-END:variables
 }
