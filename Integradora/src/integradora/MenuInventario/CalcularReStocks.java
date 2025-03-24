@@ -52,8 +52,8 @@ public class CalcularReStocks extends javax.swing.JFrame {
         Ventas = new javax.swing.JTextField();
         Reinicar = new javax.swing.JButton();
         Calcular = new javax.swing.JButton();
-        Texto = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        TextoPrincipal = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -64,7 +64,7 @@ public class CalcularReStocks extends javax.swing.JFrame {
             }
         });
 
-        UnidadesLabel.setText("Unidades por rebastecer (editable)");
+        UnidadesLabel.setText("Unidades en inventario (editable)");
 
         Unidades.setText("jTextField1");
         Unidades.addActionListener(new java.awt.event.ActionListener() {
@@ -96,10 +96,10 @@ public class CalcularReStocks extends javax.swing.JFrame {
             }
         });
 
-        jTextArea1.setEditable(false);
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        Texto.setViewportView(jTextArea1);
+        TextoPrincipal.setEditable(false);
+        TextoPrincipal.setColumns(20);
+        TextoPrincipal.setRows(5);
+        jScrollPane1.setViewportView(TextoPrincipal);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -117,12 +117,12 @@ public class CalcularReStocks extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(VentasLabel)
-                            .addComponent(Ventas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(Texto))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(Calcular, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(Reinicar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(Ventas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(Calcular, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(Reinicar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane1))
                 .addGap(155, 155, 155))
         );
         layout.setVerticalGroup(
@@ -140,8 +140,8 @@ public class CalcularReStocks extends javax.swing.JFrame {
                     .addComponent(Ventas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Calcular))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Texto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(150, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -162,7 +162,7 @@ public class CalcularReStocks extends javax.swing.JFrame {
 
     private void VentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VentasActionPerformed
         try { int text = Integer.valueOf(Unidades.getText());}
-        catch (Exception e) { Unidades.setText("0"); }
+        catch (Exception e) { Unidades.setText("1"); }
     }//GEN-LAST:event_VentasActionPerformed
 
     private void CalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CalcularActionPerformed
@@ -180,13 +180,115 @@ public class CalcularReStocks extends javax.swing.JFrame {
         catch (Exception e) {
             System.out.println("Error al acceder ventas \n" + e);
             showMessageDialog(null, "Error al acceder ventas", "Error", ERROR_MESSAGE);
-            Ventas.setText("0");
+            Ventas.setText("1");
             return;
         }
         
         
-        Texto.selectAll();
-        Texto.replaceSelection(null);
+        TextoPrincipal.selectAll();
+        TextoPrincipal.replaceSelection(null);
+        
+        if (ventas == 0){
+            System.out.println("ventas es igual a 0 en CalcularActionPerformed");
+            showMessageDialog(null, "No se pudo dividir entre cero, por favor no ponga 0 unidades vendidas", "Error", ERROR_MESSAGE);
+            return;
+        }
+        
+        double dias = (double)unidades / ventas;
+        int diasEnteros = (int)(dias);
+        
+        String texto = "Este producto se acabará ";
+        //<editor-fold defaultstate="collapsed" desc="dias en los que se acabaran las unidades">
+        if (unidades < ventas){
+            texto += "antes de que termine el día";
+            TextoPrincipal.insert(texto, 0);
+            return;
+        } else {
+            if (diasEnteros == 1){
+                texto += "hoy";
+            } else if (diasEnteros == 2) {
+                texto += "mañana";
+            } else {
+                texto += "en " + diasEnteros + " dias";
+            }
+        }
+        texto += "\n\n";
+        //</editor-fold>
+        
+        //<editor-fold defaultstate="collapsed" desc="cuantas veces a la semana se necesita">
+        if (dias > 7){
+            texto += "Este producto se mantendrá en existencia esta semana, con " + (unidades - (ventas * 7)) + " unidad(es) de sobra";
+        } else if (dias == 7){
+            texto +="Este producto se mantendrá en existencia esta semana pero necesitará reabastecerse cuando termine la semana";
+        } else {
+            double porSemana = (double)7 / dias;
+            
+            // 2025 Mar 17: No me acuerdo si hay una funcion para redondear para arriba
+            int porSemanaEntero = (int)porSemana;
+            if ((double)porSemanaEntero < porSemana) {
+                porSemanaEntero++;
+                
+                int unidadesDeSobra = (int)( (porSemana * unidades) - ((porSemanaEntero - 1) * unidades) );
+                texto += "Se necesitará rebastecer " + porSemanaEntero + " veces a la semana, pero sobrarán " + unidadesDeSobra + " unidad(es)";
+                if (unidadesDeSobra < 0) texto += "guh";
+            } else {
+                texto += "Se necesitará rebastecer " + porSemanaEntero + " veces a la semana";
+            }
+        }
+        texto += "\n\n";
+        //</editor-fold>
+        
+        //<editor-fold defaultstate="collapsed" desc="al mes">
+        texto += "Asumiendo meses de 30 dias,\n";
+        if (dias > 30){
+            texto += "este producto se mantendrá en existencia hasta el fin de mes,\n"
+                    + "con " + (unidades - (ventas * 30)) + " unidad(es) de sobra";
+        } else if (dias == 30){
+            texto +="este producto se mantendrá en existencia hasta el fin de mes\n"
+                    + "pero necesitará reabastecerse cuando termine el mes";
+        } else {
+            double porMes = (double)30 / dias;
+            
+            // 2025 Mar 17: No me acuerdo si hay una funcion para redondear para arriba
+            int porMesEntero = (int)porMes;
+            if ((double)porMesEntero < porMes) {
+                porMesEntero++;
+                
+                int unidadesDeSobra = (int)(( (porMesEntero - 1) * ventas) - unidades );
+                texto += "Se necesitará rebastecer " + porMesEntero + " veces al mes, pero sobrarán " + unidadesDeSobra + " unidad(es)";
+            } else {
+                texto += "Se necesitará rebastecer " + porMesEntero + " veces al mes";
+            }
+        }
+        texto += "\n\n";
+        //</editor-fold>
+        
+        //<editor-fold defaultstate="collapsed" desc="al año">
+        texto += "Asumiendo que el año no es bisiesto (365 días) \n";
+        if (dias > 365){
+            texto += "este producto se mantendrá en existencia hasta el fin del año,\n"
+                    + "con " + (unidades - (ventas * 365)) + " unidad(es) de sobra";
+        } else if (dias == 365){
+            texto +="este producto se mantendrá en existencia hasta el fin del año\n"
+                    + "pero necesitará reabastecerse cuando termine el año";
+        } else {
+            double porAgno = (double)365 / dias;
+            
+            // 2025 Mar 17: No me acuerdo si hay una funcion para redondear para arriba
+            int porAgnoEntero = (int)porAgno;
+            if ((double)porAgnoEntero < porAgno) {
+                porAgnoEntero++;
+                
+                int unidadesDeSobra = (int)((porAgnoEntero * ventas) - unidades );
+                texto += "Se necesitará rebastecer " + porAgnoEntero + " veces al año, pero sobrarán " + unidadesDeSobra + " unidad(es)";
+            } else {
+                texto += "Se necesitará rebastecer " + porAgnoEntero + " veces al año";
+            }
+        }
+        texto += "\n\n";
+        //</editor-fold>
+        
+        TextoPrincipal.insert(texto, 0);
     }//GEN-LAST:event_CalcularActionPerformed
 
     /**
@@ -233,11 +335,11 @@ public class CalcularReStocks extends javax.swing.JFrame {
     private javax.swing.JButton Calcular;
     private javax.swing.JButton CerrarBoton;
     private javax.swing.JButton Reinicar;
-    private javax.swing.JScrollPane Texto;
+    private javax.swing.JTextArea TextoPrincipal;
     private javax.swing.JTextField Unidades;
     private javax.swing.JLabel UnidadesLabel;
     private javax.swing.JTextField Ventas;
     private javax.swing.JLabel VentasLabel;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

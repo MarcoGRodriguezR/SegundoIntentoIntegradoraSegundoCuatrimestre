@@ -106,6 +106,11 @@ public class MenuInventario extends javax.swing.JFrame {
         jScrollPane1.setViewportView(TextoPrincipal);
 
         AgregarCuantas.setToolTipText("Introduce cuantas unidades quieres agregar");
+        AgregarCuantas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AgregarCuantasActionPerformed(evt);
+            }
+        });
 
         AgregarUnidades.setText("Agregar Unidades");
         AgregarUnidades.addActionListener(new java.awt.event.ActionListener() {
@@ -346,6 +351,10 @@ public class MenuInventario extends javax.swing.JFrame {
         calc.producto = producto;
         calc.Iniciar();
     }//GEN-LAST:event_CalcularRestocksActionPerformed
+
+    private void AgregarCuantasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AgregarCuantasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_AgregarCuantasActionPerformed
 
     /**
      * @param args the command line arguments
